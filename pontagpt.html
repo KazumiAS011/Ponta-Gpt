@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ponta Gpt</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://files.catbox.moe/ywq3rd.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            position: relative;
+        }
+
+        /* Add a blur effect to the background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(10px); /* Blur the background */
+            z-index: -1;
+            opacity: 0.6; /* Slightly fade out the background */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9); /* Slight transparency to reveal background */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 10px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            resize: none;
+            font-size: 1em;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            font-style: italic;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .loading .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ponta Gpt</h1>
+        <p>Selamat datang di Ponta Gpt! Anda dapat mengajukan pertanyaan dan mendapatkan jawaban yang informatif.</p>
+        <p>Fitur ini dimiliki oleh Ponta Gellooo.</p>
+        
+        <button id="startChatButton">Start Chat</button>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+
+        <div id="chatContainer" style="display: none;">
+            <textarea id="inputPrompt" placeholder="Mau nanya apa?"></textarea>
+            <button id="submitButton">Kirim</button>
+            <div id="response" class="response"></div>
+        </div>
+
+        <!-- Second Page with WhatsApp Links -->
+        <div id="linkContainer" style="display: none;">
+            <h2>Join Us!</h2>
+            <p>Kunjungi channel dan grup kami di WhatsApp:</p>
+            <button onclick="window.open('https://whatsapp.com/channel/0029VaAAkwOIN9ii1Tc6Mz1X', '_blank')">Channel WhatsApp</button>
+            <button onclick="window.open('https://chat.whatsapp.com/CZy0SzJKnfoLib7ICMjS4e', '_blank')">Group Chat WhatsApp</button>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('startChatButton').addEventListener('click', () => {
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('startChatButton').style.display = 'none';
+
+            // Simulate a delay before showing the chat container
+            setTimeout(() => {
+                document.getElementById('chatContainer').style.display = 'block';
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }, 1000); // Adjust delay as needed (1000ms = 1 second)
+        });
+
+        document.getElementById('submitButton').addEventListener('click', async () => {
+            const prompt = document.getElementById('inputPrompt').value.trim();
+            const responseDiv = document.getElementById('response');
+
+            if (!prompt) {
+                responseDiv.innerText = "Mau nanya apa?";
+                return;
+            }
+
+            responseDiv.innerText = "Proses Ponta Gpt...";
+
+            const apiKey = 'AIzaSyC3c6Vsmxqe3X-7xg9i2ymFqk_rCQ_d6TI';
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            
+            const body = {
+                contents: [
+                    {
+                        parts: [
+                            { text: prompt }
+                        ]
+                    }
+                ]
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const candidates = data.candidates;
+                    let message = candidates && candidates.length > 0
+                        ? candidates[0].content.parts[0].text
+                        : 'Tidak ada respons yang diterima dari model.';
+
+                    // Mengganti ** dengan * dan # lebih dari satu menjadi satu #
+                    message = message.replace(/\*\*/g, '*');
+                    message = message.replace(/#{2,}/g, '#');
+
+                    responseDiv.innerText = message;
+                } else {
+                    responseDiv.innerText = 'Gagal mendapatkan respons dari Ponta Gpt.';
+                }
+            } catch (error) {
+                console.error(error);
+                responseDiv.innerText = 'Terjadi kesalahan saat memproses permintaan Anda.';
+            }
+        });
+    </script>
+</body>
+</html>
